@@ -1,7 +1,11 @@
 //------------------------------
 // Application
 //------------------------------
-var App = Em.Application.create();
+var App = Em.Application.create({
+    ready: function() {
+      $("#bathroomData").hide();
+    }
+});
 
 //------------------------------
 // Models
@@ -53,11 +57,19 @@ App.LocationFormView = Ember.View.extend({
 });
 
 //------------------------------
+// Classes
+//------------------------------
+App.ArrayControllerSortable = Em.ArrayController.extend(Ember.SortableMixin);
+
+//------------------------------
 // Controllers
 //------------------------------
-App.bathroomController = Em.ArrayController.create({
+App.bathroomController = App.ArrayControllerSortable.create({
     content: [],
+    sortProperties: ['distance'],
     loadBathrooms: function () {
+        this.clear();
+
         var me = this;
 
         var lat = $("#lat").val();
@@ -66,9 +78,16 @@ App.bathroomController = Em.ArrayController.create({
         console.log(lat);
         console.log(lng);
         console.log(parseFloat(lat).toFixed(2));
-  
-        var url = "http://crapp-api.herokuapp.com/bathrooms/fetch?lat=41.819870&lng=-71.412601&callback=?";
+
         //var url = "http://localhost:3000/bathrooms/fetch?lat=41.819870&lng=-71.412601&callback=?";
+        //var url = "http://crapp-api.herokuapp.com/bathrooms/fetch?lat=41.819870&lng=-71.412601&callback=?";
+
+        var url = "http://crapp-api.herokuapp.com/bathrooms/fetch?";
+        var url = url + "lat=" + lat;
+        var url = url + "&";
+        var url = url + "lng=" + lng;
+        var url = url + "&";
+        var url = url + "callback=?";
 
         $.getJSON(url, function(data){
             // For each bathroom, create objects.
@@ -80,14 +99,18 @@ App.bathroomController = Em.ArrayController.create({
                   lng: this.info.lng,
                   distance: parseFloat(this.distance).toFixed(2),
               });
-              me.pushObject(p);
+              me.addObject(p);
             });
+            
+            // Show the Bathroom data table.
+            $("#bathroomData").show();
         });
     },
     loadCoords: function() {
         $("#lat").val("41.819870");
         $("#lng").val("-71.412601");
     
+        this.clear();
         this.loadBathrooms();
     },
     clear: function() {
