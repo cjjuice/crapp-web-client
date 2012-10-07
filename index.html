@@ -68,15 +68,15 @@
 
         <!-- Example row of columns -->
         <div class="row">
-        <div style="width: 325px; margin: 0 auto;">
+        <div class="span4">
             <img src="assets/img/krapp_logo.png">
-            <p style="text-align: center;">When you gotta go, you gotta go.</p>
+            <p>When you gotta go, you gotta go.</p>
           </div>
         </div>
 
         <script type="text/x-handlebars">
         <div class="row">
-        <div style="width: 200px; margin: 0 auto;">
+        <div class="span4">
 
             <form class="form-inline">
               <input id="lat" type="lat" class="input-small" placeholder="Latitude">
@@ -85,7 +85,7 @@
         </div>
 
         <div class="row">
-        <div style="width: 170px; margin: 0 auto;">
+        <div class="span4">
 
               <button type="submit" class="btn btn-primary" {{action "loadBathrooms" target="App.bathroomController"}}>Submit</button>
               <button type="submit" class="btn btn-danger" {{action "loadCoords" target="App.bathroomController"}}>Gotta Go!</button>
@@ -96,7 +96,7 @@
         </script>
 
         <div id="bathroomData" class="row">
-        <div style="width: 570px; margin: 0 auto;">
+        <div class="span6">
 
           <hr />
 
