@@ -65,19 +65,20 @@ App.bathroomController = Em.ArrayController.create({
         
         console.log(lat);
         console.log(lng);
+        console.log(parseFloat(lat).toFixed(2));
   
         var url = "http://crapp-api.herokuapp.com/bathrooms/fetch?lat=41.819870&lng=-71.412601&callback=?";
         //var url = "http://localhost:3000/bathrooms/fetch?lat=41.819870&lng=-71.412601&callback=?";
 
         $.getJSON(url, function(data){
             // For each bathroom, create objects.
-            $.each(data.bathrooms, function() {
+            $.each(data.bathrooms, function(index) {
               console.log(this.info.name);
               var p = App.Bathroom.create({
                   name: this.info.name,
                   lat: this.info.lat,
                   lng: this.info.lng,
-                  distance: this.distance
+                  distance: parseFloat(this.distance).toFixed(2),
               });
               me.pushObject(p);
             });

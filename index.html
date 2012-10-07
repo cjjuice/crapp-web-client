@@ -32,9 +32,6 @@
 
   <body>
 
-    <script type="text/x-handlebars">
-    </script>
-
       <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="navbar-inner">
           <div class="container">
@@ -71,40 +68,51 @@
 
         <!-- Example row of columns -->
         <div class="row">
-          <div class="span10">
+          <div class="span4">
             <h1>Krapp!</h1>
             <p>When you gotta go, you gotta go.</p>
           </div>
         </div>
-        <div class="row">
-          <div class="span10">
 
-          <script type="text/x-handlebars">
+        <script type="text/x-handlebars">
+        <div class="row">
+          <div class="span4">
+
             <form class="form-inline">
               <input id="lat" type="lat" class="input-small" placeholder="Latitude">
               <input id="lng" type="lng" class="input-small" placeholder="Longitude">
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="span4">
+
               <button type="submit" class="btn btn-primary" {{action "loadBathrooms" target="App.bathroomController"}}>Submit</button>
               <button type="submit" class="btn btn-danger" {{action "loadCoords" target="App.bathroomController"}}>Gotta Go!</button>
             </form>           
-          </script>
 
-            <hr />
+          </div>
+        </div>
+        </script>
+
+        <hr />
+
+        <div class="row">
+          <div class="span6">
 
           <script type="text/x-handlebars">
             <table class="table table-striped table-bordered">
               <thead>
                 <tr>
-                  <th>#</th>
                   <th>Name</th>
                   <th>Latitude</th>
                   <th>Longitude</th>
-                  <th>Distance</th>
+                  <th>Distance (mi)</th>
                 </tr>
               </thead>
               <tbody>
                 {{#each App.bathroomController}}
                     <tr>
-                      <td>1</td>
                       <td>{{name}}</td>
                       <td>{{lat}}</td>
                       <td>{{lng}}</td>
