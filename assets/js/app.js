@@ -33,27 +33,20 @@ App.Bathroom = Em.Object.extend({
     distance: null
 });
 
+App.testThis = Em.Object.create({
+    visible: false,
+});
+
 //------------------------------
 // Views
 //------------------------------
-App.MyView = Em.View.extend({
-  mouseDown: function() {
-    window.alert("hello world!");
-  }
-});
-
-App.LocationFormView = Ember.View.extend({
-  lat: null,
-  lng: null,
-
-  submitLocation: function() {
-    var lat = this.get('lat');
-    var lng = this.get('lng');
-
-    console.log("Here!");
-    console.log(lat);
-    console.log(lng);
-  },
+App.LocationTextField = Em.TextField.extend({
+    isVisibleBinding: 'App.testThis.visible',
+    classNames: ['input-small'],
+    insertNewline: function(){
+        //App.tweetsController.loadTweets();
+        console.log('Someone hit enter!');
+    },
 });
 
 //------------------------------
@@ -66,52 +59,65 @@ App.ArrayControllerSortable = Em.ArrayController.extend(Ember.SortableMixin);
 //------------------------------
 App.bathroomController = App.ArrayControllerSortable.create({
     content: [],
+    latitude: '',
+    longitude: '',
     sortProperties: ['distance'],
     loadBathrooms: function () {
         this.clear();
 
         var me = this;
 
-        var lat = $("#lat").val();
-        var lng = $("#lng").val();
-        
+        var lat = me.get("latitude");
+        var lng = me.get("longitude");
+
+        var token = "7635b571a558921a3efb686e322df599";
+
         console.log(lat);
         console.log(lng);
-        console.log(parseFloat(lat).toFixed(2));
 
-        //var url = "http://localhost:3000/bathrooms/fetch?lat=41.819870&lng=-71.412601&callback=?";
-        //var url = "http://crapp-api.herokuapp.com/bathrooms/fetch?lat=41.819870&lng=-71.412601&callback=?";
+        if (lat && lng) {
+            // Build a url to query.
+            var url = "http://crapp-api.herokuapp.com/bathrooms/fetch?";
+            var url = url + "lat=" + lat;
+            var url = url + "&";
+            var url = url + "lng=" + lng;
+            var url = url + "&";
+            var url = url + "access_token=" + token;
+            var url = url + "&";
+            var url = url + "callback=?";
 
-        var url = "http://crapp-api.herokuapp.com/bathrooms/fetch?";
-        var url = url + "lat=" + lat;
-        var url = url + "&";
-        var url = url + "lng=" + lng;
-        var url = url + "&";
-        var url = url + "callback=?";
+            $.getJSON(url, function(data){
+                // For each bathroom, create objects.
+                $.each(data.bathrooms, function(index) {
+                  var p = App.Bathroom.create({
+                      name: this.info.name,
+                      lat: this.info.lat,
+                      lng: this.info.lng,
+                      distance: parseFloat(this.distance).toFixed(2),
+                  });
+                  me.addObject(p);
+                });
 
-        $.getJSON(url, function(data){
-            // For each bathroom, create objects.
-            $.each(data.bathrooms, function(index) {
-              console.log(this.info.name);
-              var p = App.Bathroom.create({
-                  name: this.info.name,
-                  lat: this.info.lat,
-                  lng: this.info.lng,
-                  distance: parseFloat(this.distance).toFixed(2),
-              });
-              me.addObject(p);
+                // Show the Bathroom data table.
+                $("#bathroomData").show();
             });
-            
-            // Show the Bathroom data table.
-            $("#bathroomData").show();
-        });
+        }
     },
-    loadCoords: function() {
-        $("#lat").val("41.819870");
-        $("#lng").val("-71.412601");
-    
-        this.clear();
-        this.loadBathrooms();
+    loadCoordinates: function () {
+        var me = this;
+
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                me.set('latitude', position.coords.latitude);
+                me.set('longitude', position.coords.longitude);
+
+                App.testThis.set('visible', true);
+
+                me.loadBathrooms();
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
     },
     clear: function() {
         this.set('content', []);

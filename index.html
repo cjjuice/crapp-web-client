@@ -79,17 +79,16 @@
         <div class="span4">
 
             <form class="form-inline">
-              <input id="lat" type="lat" class="input-small" placeholder="Latitude">
-              <input id="lng" type="lng" class="input-small" placeholder="Longitude">
+              {{view App.LocationTextField placeholder="Latitude" valueBinding="App.bathroomController.latitude"}}
+              {{view App.LocationTextField placeholder="Longitude" valueBinding="App.bathroomController.longitude"}}
           </div>
         </div>
 
         <div class="row">
         <div class="span4">
 
-              <button type="submit" class="btn btn-primary" {{action "loadBathrooms" target="App.bathroomController"}}>Submit</button>
-              <button type="submit" class="btn btn-danger" {{action "loadCoords" target="App.bathroomController"}}>Gotta Go!</button>
-            </form>           
+              <button type="submit" class="btn btn-danger" {{action "loadCoordinates" target="App.bathroomController"}}>Gotta Go!</button>
+            </form>
 
           </div>
         </div>
