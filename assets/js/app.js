@@ -1,3 +1,6 @@
+//------------------------------
+// Application
+//------------------------------
 window.App = Ember.Application.create({
   ApplicationView: Ember.View.extend({
     templateName:  'application'
@@ -8,49 +11,113 @@ window.App = Ember.Application.create({
   },
 });
 
-App.Post = Em.Object.extend({
-  title: null,
-  body: null,
-  id: null
+//------------------------------
+// Models
+//------------------------------
+App.Bathroom = Em.Object.extend({
+    id: null,
+    name: null,
+    address: null,
+    city: null,
+    state: null,
+    zip: null,
+    lat: null,
+    lng: null,
+    isHandicapAccessible: null,
+    isPublic: null,
+    isFamily: null,
+    isGreen: null,
+    isUnisex: null,
+    isHandsFree: null,
+    hasProductDispenser: null,
+    hasAttendent: null,
+    hasSignage: null,
+    hasWifi: null,
+    bathroomtype_id: null,
+    created_at: null,
+    distance: null
 });
 
-App.PostsController = Em.ArrayController.extend({
-  content: []
+//------------------------------
+// Controllers
+//------------------------------
+App.ArrayControllerSortable = Em.ArrayController.extend(Ember.SortableMixin);
+
+App.BathroomsController = Em.ArrayController.extend(Ember.SortableMixin, {
+  content: [],
+  latitude: '',
+  longitude: '',
+  sortProperties: ['distance'],
+  loadCoordinates: function() {
+    console.log("loadCoordinates called!");
+    console.log('Latitude: ', this.get('latitude'));
+  }
 });
 
-App.PostController = Em.ObjectController.extend();
+App.BathroomController = Em.ObjectController.extend();
 
-App.PostsView = Em.View.extend({
-  templateName: 'posts'
+//------------------------------
+// Controllers Instantiations
+//------------------------------
+App.bathroomsController = App.BathroomsController.create();
+
+//------------------------------
+// Views
+//------------------------------
+App.BathroomsView = Em.View.extend({
+  templateName: 'bathrooms'
 });
 
-App.PostView = Em.View.extend({
-  templateName: 'post'
+App.BathroomView = Em.View.extend({
+  templateName: 'bathroom'
 });
 
-testPost = App.Post.create({
-  title: "Post Title",
-  body: "Post Body",
+App.LocationTextField = Em.TextField.extend({
+  //isVisibleBinding: 'App.testThis.visible',
+  classNames: ['input-small'],
+  insertNewline: function(){
+    //App.tweetsController.loadTweets();
+    console.log('Someone hit enter!');
+  },
+});
+
+//------------------------------
+// Test Data
+//------------------------------
+testBathroom_1 = App.Bathroom.create({
+  name: "Facility 1",
+  address: "100 Grand St",
+  distance: 0.5198,
   id: 1
 });
 
+testBathroom_2 = App.Bathroom.create({
+  name: "Facility 2",
+  address: "100 Park St",
+  distance: 0.3201,
+  id: 2
+});
+
+//------------------------------
+// Router
+//------------------------------
 App.Router = Em.Router.extend({
   root: Em.Route.extend({
     index: Em.Route.extend({
       route: '/',
-      redirectsTo: 'posts'
+      redirectsTo: 'bathrooms'
     }),
-    posts: Em.Route.extend({
-      route: '/posts',
-      showPost: Em.Router.transitionTo('post'),
+    bathrooms: Em.Route.extend({
+      route: '/bathrooms',
+      showBathroom: Em.Router.transitionTo('bathroom'),
       connectOutlets: function(router) {
-        return router.get("applicationController").connectOutlet('posts', [testPost]);
+        return router.get("applicationController").connectOutlet('bathrooms', [testBathroom_1, testBathroom_2]);
       }
     }),
-    post: Em.Route.extend({
-      route: '/posts/:post_id',
-      connectOutlets: function(router, post) {
-        return router.get('applicationController').connectOutlet('post', post);
+    bathroom: Em.Route.extend({
+      route: '/bathrooms/:bathroom_id',
+      connectOutlets: function(router, bathroom) {
+        return router.get('applicationController').connectOutlet('bathroom', bathroom);
       }
     })
   })
