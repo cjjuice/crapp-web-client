@@ -75,7 +75,7 @@
           <img src="assets/img/krapp_logo.png">
           <p>When you gotta go, you gotta go.</p>
           {{view App.LocationTextField placeholder="Latitude" valueBinding="App.bathroomsController.latitude"}}
-          {{view App.LocationTextField placeholder="Longitude" valueBinding="App.bathroomController.longitude"}}
+          {{view App.LocationTextField placeholder="Longitude" valueBinding="App.bathroomsController.longitude"}}
           <button type="submit" class="btn btn-danger" {{action "loadCoordinates" target="App.bathroomsController"}}>Gotta Go!</button>
       </div>
       </div>
@@ -97,7 +97,6 @@
   <script type="text/x-handlebars" data-template-name="bathrooms">
     {{#each bathroom in controller}}
       <h2><a {{action showBathroom bathroom href=true}}>{{bathroom.name}}</a></h2>
-      <div>{{bathroom.address}}</div>
       <div>{{bathroom.distance}} (mi)</div>
     {{/each}}
   </script>
@@ -106,10 +105,11 @@
   <!-- TEMPLATE: bathroom -->
   <!-- **************************************************************** -->
   <script type="text/x-handlebars" data-template-name="bathroom">
-    <h1>{{name}}</h1>
-    <div class="body">
-      {{address}}
-    </div>
+    <h3>{{name}}</h3>
+    <div>{{getAddress}}</div>
+    <div>{{lat}}</div>
+    <div>{{lng}}</div>
+    <div>{{distance}}</div>
     {{outlet}}
   </script>
 
