@@ -48,6 +48,7 @@
           <div class="nav-collapse collapse">
             <ul class="nav">
               <li class="active"><a href="#">Home</a></li>
+              <li><a {{action gotoBathroomAdd href=true}}>Add</a></li>
               <li><a href="#about">About</a></li>
               <li><a href="#contact">Contact</a></li>
               <li class="dropdown">
@@ -121,6 +122,13 @@
     {{#each review in controller}}
       <div>{{review.text}}</div>
     {{/each}}
+  </script>
+
+  <!-- **************************************************************** -->
+  <!-- TEMPLATE: bathroomAdd -->
+  <!-- **************************************************************** -->
+  <script type="text/x-handlebars" data-template-name="bathroomAdd">
+    <h2>Add a Facility</h2>
   </script>
 
     <!-- Le javascript

@@ -138,6 +138,8 @@ App.BathroomsController = Em.ArrayController.extend(Ember.SortableMixin, {
 
 App.BathroomController = Em.ObjectController.extend();
 
+App.BathroomAddController = Em.ObjectController.extend();
+
 App.ReviewsController = Em.ArrayController.extend();
 
 //------------------------------
@@ -151,7 +153,7 @@ App.bathroomsController = App.BathroomsController.create({
 
     [1, 2, 3, 4].forEach(function(num) {
       var r = App.Review.create({
-        text: 'This is a great can!',
+        text: 'This is a great can! #' + num,
       });
       var p = App.Bathroom.create({
         id: num,
@@ -185,11 +187,13 @@ App.ReviewsView = Em.View.extend({
   templateName: 'reviews'
 });
 
+App.BathroomAddView = Em.View.extend({
+  templateName: 'bathroomAdd'
+});
+
 App.LocationTextField = Em.TextField.extend({
-  //isVisibleBinding: 'App.testThis.visible',
   classNames: ['input-small'],
   insertNewline: function(){
-    //App.tweetsController.loadTweets();
     console.log('Someone hit enter!');
   },
 });
@@ -215,25 +219,36 @@ testBathroom_2 = App.Bathroom.create({
 // Router
 //------------------------------
 App.Router = Em.Router.extend({
+  gotoBathroomAdd: Em.Router.transitionTo('bathrooms.add'),
   root: Em.Route.extend({
     index: Em.Route.extend({
       route: '/',
-      redirectsTo: 'bathrooms'
+      redirectsTo: 'bathrooms.index',
     }),
     bathrooms: Em.Route.extend({
       route: '/bathrooms',
       showBathroom: Em.Router.transitionTo('bathroom'),
-      connectOutlets: function(router) {
-        router.get("applicationController").connectOutlet('bathrooms', App.Bathroom.all);
-      }
+      index: Em.Route.extend({
+        route: '/',
+        connectOutlets: function(router) {
+          router.get("applicationController").connectOutlet('bathrooms', App.Bathroom.all);
+        }
+      }),
+      bathroom: Em.Route.extend({
+        route: '/:bathroom_id',
+        connectOutlets: function(router, bathroom) {
+          router.get('applicationController').connectOutlet('bathroom', bathroom);
+          router.get('bathroomController').connectOutlet('reviews', bathroom.reviews);
+        }
+      }),
+      add: Em.Route.extend({
+        route: '/add',
+        connectOutlets: function(router) {
+          console.log('bathroomAdd connect!');
+          router.get('applicationController').connectOutlet('bathroomAdd');
+        }
+      }),
     }),
-    bathroom: Em.Route.extend({
-      route: '/bathrooms/:bathroom_id',
-      connectOutlets: function(router, bathroom) {
-        router.get('applicationController').connectOutlet('bathroom', bathroom);
-        router.get('bathroomController').connectOutlet('reviews', bathroom.reviews);
-      }
-    })
   })
 });
 
