@@ -97,6 +97,7 @@
   <script type="text/x-handlebars" data-template-name="bathrooms">
     {{#each bathroom in controller}}
       <h2><a {{action showBathroom bathroom href=true}}>{{bathroom.name}}</a></h2>
+      <div>{{bathroom.getAddress}}</div>
       <div>{{bathroom.distance}} (mi)</div>
     {{/each}}
   </script>
@@ -107,12 +108,20 @@
   <script type="text/x-handlebars" data-template-name="bathroom">
     <h3>{{name}}</h3>
     <div>{{getAddress}}</div>
-    <div>{{lat}}</div>
-    <div>{{lng}}</div>
-    <div>{{distance}}</div>
+    <div>{{lat}}, {{lng}}</div>
+    <div>{{distance}} (mi)</div>
     {{outlet}}
   </script>
 
+  <!-- **************************************************************** -->
+  <!-- TEMPLATE: reviews -->
+  <!-- **************************************************************** -->
+  <script type="text/x-handlebars" data-template-name="reviews">
+    <h4>Reviews</h4>
+    {{#each review in controller}}
+      <div>{{review.text}}</div>
+    {{/each}}
+  </script>
 
     <!-- Le javascript
     ================================================== -->

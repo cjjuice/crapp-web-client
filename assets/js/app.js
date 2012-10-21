@@ -14,9 +14,16 @@ window.App = Ember.Application.create({
 //------------------------------
 // Models
 //------------------------------
-App.Score = Em.Object.extend();
+App.Score = Em.Object.extend({
+  type: null,
+  value: null,
+  created_at: null,
+});
 
-App.Review = Em.Object.extend();
+App.Review = Em.Object.extend({
+  text: null,
+  created_at: null,
+});
 
 App.Bathroom = Em.Object.extend({
   id: null,
@@ -131,6 +138,8 @@ App.BathroomsController = Em.ArrayController.extend(Ember.SortableMixin, {
 
 App.BathroomController = Em.ObjectController.extend();
 
+App.ReviewsController = Em.ArrayController.extend();
+
 //------------------------------
 // Controllers Instantiations
 //------------------------------
@@ -141,6 +150,9 @@ App.bathroomsController = App.BathroomsController.create({
     var me = this;
 
     [1, 2, 3, 4].forEach(function(num) {
+      var r = App.Review.create({
+        text: 'This is a great can!',
+      });
       var p = App.Bathroom.create({
         id: num,
         name: 'Facility ' + num,
@@ -152,6 +164,7 @@ App.bathroomsController = App.BathroomsController.create({
         state: 'RI',
         zip: '02906',
       });
+      p.reviews.push(r);
       me.addObject(p);
     });
   },
@@ -166,6 +179,10 @@ App.BathroomsView = Em.View.extend({
 
 App.BathroomView = Em.View.extend({
   templateName: 'bathroom'
+});
+
+App.ReviewsView = Em.View.extend({
+  templateName: 'reviews'
 });
 
 App.LocationTextField = Em.TextField.extend({
@@ -207,13 +224,14 @@ App.Router = Em.Router.extend({
       route: '/bathrooms',
       showBathroom: Em.Router.transitionTo('bathroom'),
       connectOutlets: function(router) {
-        return router.get("applicationController").connectOutlet('bathrooms', App.Bathroom.all);
+        router.get("applicationController").connectOutlet('bathrooms', App.Bathroom.all);
       }
     }),
     bathroom: Em.Route.extend({
       route: '/bathrooms/:bathroom_id',
       connectOutlets: function(router, bathroom) {
-        return router.get('applicationController').connectOutlet('bathroom', bathroom);
+        router.get('applicationController').connectOutlet('bathroom', bathroom);
+        router.get('bathroomController').connectOutlet('reviews', bathroom.reviews);
       }
     })
   })
