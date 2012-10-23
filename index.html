@@ -96,11 +96,12 @@
   <!-- TEMPLATE: bathrooms -->
   <!-- **************************************************************** -->
   <script type="text/x-handlebars" data-template-name="bathrooms">
-    {{#each bathroom in controller}}
+    {{#each bathroom in App.bathroomsController}}
       <h2><a {{action showBathroom bathroom href=true}}>{{bathroom.name}}</a></h2>
-      <div>{{bathroom.getAddress}}</div>
+      <div>{{bathroom.address}}</div>
       <div>{{bathroom.distance}} (mi)</div>
     {{/each}}
+      <h5>Don&#39;t see a bathroom? <a {{action showAddBathroom href=true }}>Add it!</a></h5>
   </script>
 
   <!-- **************************************************************** -->
@@ -108,7 +109,7 @@
   <!-- **************************************************************** -->
   <script type="text/x-handlebars" data-template-name="bathroom">
     <h3>{{name}}</h3>
-    <div>{{getAddress}}</div>
+    <div>{{address}}</div>
     <div>{{lat}}, {{lng}}</div>
     <div>{{distance}} (mi)</div>
     {{outlet}}
@@ -128,7 +129,13 @@
   <!-- TEMPLATE: bathroomAdd -->
   <!-- **************************************************************** -->
   <script type="text/x-handlebars" data-template-name="bathroomAdd">
-    <h2>Add a Facility</h2>
+    <h2>Add a Bathroom</h2>
+     {{view App.LocationTextField placeholder="Name" valueBinding="App.bathroomAddController.name"}}
+     {{view App.LocationTextField placeholder="Address" valueBinding="App.bathroomAddController.address"}}
+     {{view App.LocationTextField placeholder="City" valueBinding="App.bathroomAddController.city"}}
+     {{view App.LocationTextField placeholder="State" valueBinding="App.bathroomAddController.state"}}
+     {{view App.LocationTextField placeholder="Zip" valueBinding="App.bathroomAddController.zip"}}
+     <button type="submit" class="btn btn-danger" {{action "loadCoordinates" target="App.bathroomAddController"}}>Submit</button>    
   </script>
 
     <!-- Le javascript
